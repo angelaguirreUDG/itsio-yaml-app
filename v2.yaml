@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-rest-api-v2-1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: movie-rest-api-v2-1
+  template:
+    metadata:
+      labels:
+        app: movie-rest-api-v2-1
+    spec:
+      containers:
+      - name: nodeserver
+        image: angelaguirreudg/movie-rest-api:latest
+        imagePullPolicy: IfNotPresent        
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "200m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: movie-rest-api-v2-1-svc
+spec:
+  selector:
+    app: movie-rest-api-v2-1
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
